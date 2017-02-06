@@ -50,12 +50,15 @@ public class AVLTree
 					node = doubleRotateRight(node);
 		}
 		else
-			;
+			;//insert pop-up dialogue
 		
-		node.height = max(height(node.left), height(node.right)) + 1;
+		if(cmprName.compareTo(node.cmprName) == 0)
+			node.height = max(height(node.left), height(node.right));
+		else
+			node.height = max(height(node.left), height(node.right)) + 1;
 		return node;
 	}//end insert method
-	
+
 	AVLNode rotateLeft(AVLNode node2)
 	{
 		AVLNode node1 = node2.left;
@@ -184,7 +187,7 @@ public class AVLTree
 		if(n != null)
 		{
 			printTree(n.left);
-			System.out.println(n.name);
+			System.out.println(n);
 			printTree(n.right);
 		}
 	}

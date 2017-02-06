@@ -31,4 +31,9 @@ public class AVLNode
 		this.album = album;
 		this.year = year;
 	}
+	
+	public String toString()
+	{
+		return "'" + name + "' by '" + artist + "'";
+	}
 }
