@@ -1,3 +1,8 @@
+/*
+ * CS 213 Assignment 1
+ * Created by Dillon Heyck and Francis Joe
+ */
+
 package application;
 	
 import javafx.application.Application;
@@ -7,7 +12,7 @@ import view.MP3Controller;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
-public class Main extends Application {
+public class SongLib extends Application {
 		
 	public void start(Stage primaryStage) {
 		

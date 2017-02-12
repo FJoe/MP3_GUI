@@ -1,3 +1,8 @@
+/*
+ * CS 213 Assignment 1
+ * Created by Dillon Heyck and Francis Joe
+ */
+
 package view;
 
 import java.util.Collections;
