@@ -1,4 +1,4 @@
-package songMP3Package;
+package application;
 
 public class AVLTree
 {
@@ -10,7 +10,7 @@ public class AVLTree
 		root = null;
 	}
 	
-	void insert(String name, String artist, String album, String year)
+	public void insert(String name, String artist, String album, String year)
 	{
 		root = insert(name, artist, album, year, root);
 	}
