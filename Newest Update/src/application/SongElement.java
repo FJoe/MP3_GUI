@@ -33,7 +33,7 @@ public class SongElement
 	public SongElement(String name, String artist, String album, String year)
 	{
 		this.name = name;
-		cmprName = (name + artist).toUpperCase();
+		cmprName = (name + "-" + artist).toUpperCase();
 		this.artist = artist;
 		this.album = album;
 		this.year = year;

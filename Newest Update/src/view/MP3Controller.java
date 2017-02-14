@@ -61,14 +61,16 @@ public class MP3Controller
 		}
 		catch(FileNotFoundException e)
 		{
-			System.out.println("ERROR FINDING songList.txt");
-			//TRY TO OPEN NEW songList.txt here
+			try {
+				songList.createNewFile();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			return;
 		}
 		
 		while(input.hasNextLine())
 		{
-			System.out.println("In while loop");
 			String name = input.nextLine();
 			String artist = input.nextLine();
 			String album = input.nextLine();
@@ -176,7 +178,6 @@ public class MP3Controller
 						BufferedWriter bw = new BufferedWriter(fw);
 						PrintWriter out = new PrintWriter(bw))
 					{
-						out.println();
 						out.println(toAdd.name);
 						out.println(toAdd.artist);
 						out.println(toAdd.album);
@@ -195,6 +196,11 @@ public class MP3Controller
 				listView.setItems(obsList);
 				listView.getSelectionModel().select(toAdd);
 				
+				songInput.setText("");
+				artistInput.setText("");
+				albumInput.setText("");
+				yearInput.setText("");
+				
 				displaySelected();
 			}
 		});//end .setOnAction
@@ -207,6 +213,16 @@ public class MP3Controller
 			public void handle(ActionEvent event) 
 			{
 				SongElement selectedSong = listView.getSelectionModel().getSelectedItem();
+				
+				if(selectedSong == null)
+				{
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error Editing Song");
+					alert.setHeaderText("No song was selecetd to edit");
+					alert.initOwner(mainStage);
+					alert.showAndWait();
+					return;
+				}
 						
 				boolean changes = false;
 				
@@ -307,6 +323,47 @@ public class MP3Controller
 				SongElement toAdd = new SongElement(newName, newArtist, newAlbum, newYear); 
 				obsList.add(toAdd);
 				
+				File songList = new File("songList.txt");
+				File songListTemp = new File("songListTemp.txt");
+				try(
+						Scanner scan = new Scanner(songList);
+						FileWriter fw = new FileWriter("songListTemp.txt", true);
+						BufferedWriter bw = new BufferedWriter(fw);
+						PrintWriter out = new PrintWriter(bw))
+					{
+						while(scan.hasNextLine())
+						{
+							String name = scan.nextLine();
+							String artist = scan.nextLine();
+							if(!(name.equals(selectedSong.name) && artist.equals(selectedSong.artist)))
+							{
+								out.println(name);
+								out.println(artist);
+								out.println(scan.nextLine());
+								out.println(scan.nextLine());
+							}
+							else
+							{
+								scan.nextLine();
+								scan.nextLine();
+								out.println(newName);
+								out.println(newArtist);
+								out.println(newAlbum);
+								out.println(newYear);
+							}
+						}
+					}catch(IOException e)
+					{
+						Alert alert2 = new Alert(AlertType.ERROR);
+						alert2.setTitle("Error Adding Song");
+						alert2.setHeaderText("Error loading song into text file");
+						alert2.initOwner(mainStage);
+						alert2.showAndWait();
+						return;
+					}
+				songList.delete();
+				songListTemp.renameTo(songList);
+				
 				Collections.sort(obsList, SongElement.Comparators.NAME);
 				listView.refresh();
 				listView.getSelectionModel().select(toAdd);
@@ -327,6 +384,15 @@ public class MP3Controller
 			public void handle(ActionEvent event) 
 			{
 				SongElement selectedSong = listView.getSelectionModel().getSelectedItem();
+				if(selectedSong == null)
+				{
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error Deleting Song");
+					alert.setHeaderText("No song was selecetd to delete");
+					alert.initOwner(mainStage);
+					alert.showAndWait();
+					return;
+				}
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Deleting Song");
 				alert.setHeaderText("Are you sure you want to delete this song?");
@@ -345,6 +411,43 @@ public class MP3Controller
 				{
 					listView.getSelectionModel().select(deletedIndex - 1);
 				}
+				
+				File songList = new File("songList.txt");
+				File songListTemp = new File("songListTemp.txt");
+				try(
+						Scanner scan = new Scanner(songList);
+						FileWriter fw = new FileWriter("songListTemp.txt", true);
+						BufferedWriter bw = new BufferedWriter(fw);
+						PrintWriter out = new PrintWriter(bw))
+					{
+						while(scan.hasNextLine())
+						{
+							String name = scan.nextLine();
+							String artist = scan.nextLine();
+							if(!(name.equals(selectedSong.name) && artist.equals(selectedSong.artist)))
+							{
+								out.println(name);
+								out.println(artist);
+								out.println(scan.nextLine());
+								out.println(scan.nextLine());
+							}
+							else
+							{
+								scan.nextLine();
+								scan.nextLine();
+							}
+						}
+					}catch(IOException e)
+					{
+						Alert alert2 = new Alert(AlertType.ERROR);
+						alert2.setTitle("Error Adding Song");
+						alert2.setHeaderText("Error loading song into text file");
+						alert2.initOwner(mainStage);
+						alert2.showAndWait();
+						return;
+					}
+				songList.delete();
+				songListTemp.renameTo(songList);
 				
 				displaySelected();
 			}
